@@ -1,3 +1,4 @@
+import { ModeToggle } from '@/components/ModeToggle';
 import { ProjectSearch } from '@/components/ProjectSearch';
 import { ProjectFilters } from '@/components/project-filters';
 import { ProjectList } from '@/components/project-list';
@@ -13,7 +14,7 @@ export default function Home() {
               <p className="text-sm text-muted-foreground">Find your next project effortlessly!</p>
             </div>
           </div>
-          {/* <ThemeToggle /> */}
+          <ModeToggle />
         </div>
       </header>
 
