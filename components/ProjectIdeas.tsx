@@ -29,16 +29,24 @@ export function ProjectIdeas() {
 
   const handleSubmit = async () => {
     try {
-      console.log(filters);
       const response = await fetch('/api/generate', {
         method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
         body: JSON.stringify({ filters })
       });
       
       const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to generate idea');
+      }
+      
       console.log('Generated Idea:', data.idea);
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Error details:', error);
+      // Handle error in UI (e.g., show error message to user)
     }
   };
 

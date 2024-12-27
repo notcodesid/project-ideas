@@ -1,32 +1,60 @@
-import { OpenAI } from 'openai';
-import { NextResponse } from 'next/server';
-
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+import { NextResponse } from "next/server";
+import OpenAI from "openai";
 
 export async function POST(req: Request) {
-  try {
-    const { prompt, filters } = await req.json();
 
-    const systemPrompt = `You are a project idea generator. Generate a detailed project idea based on the user's requirements and following filters:
-    - Category: ${filters.categories.join(', ')}
-    - Technologies: ${filters.technologies.join(', ')}
-    - Complexity: ${filters.complexity}
-    - Target Audience: ${filters.audience.join(', ')}`;
+    const openai = new OpenAI({
+        apiKey: process.env.OPENAI_API_KEY
+      });
 
-    const response = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
-      messages: [
-        { role: "system", content: systemPrompt },
-        { role: "user", content: prompt }
-      ],
-      temperature: 0.7,
-    });
-
-    return NextResponse.json({ idea: response.choices[0].message.content });
-  } catch (error) {
-    console.error(error);
-    return NextResponse.json({ error: 'Failed to generate idea' }, { status: 500 });
+    try {
+      const { filters } = await req.json();
+      
+      // Validate filters
+      if (!filters?.categories || !filters?.technologies || !filters?.complexity || !filters?.audience) {
+        return NextResponse.json(
+          { error: 'Missing required filter fields' },
+          { status: 400 }
+        );
+      }
+  
+      const promptText = `Generate a project idea with:
+      Category: ${filters.categories.join(', ')}
+      Technologies: ${filters.technologies.join(', ')}
+      Complexity: ${filters.complexity}
+      Audience: ${filters.audience.join(', ')}`;
+  
+      const completion = await openai.chat.completions.create({
+        model: "gpt-3.5",
+        messages: [
+          {
+            role: "system",
+            content: "You are a creative project idea generator. Provide detailed, practical project suggestions."
+          },
+          {
+            role: "user",
+            content: promptText
+          }
+        ]
+      });
+  
+      return NextResponse.json({
+        idea: completion.choices[0].message.content
+      });
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error('API Error:', {
+          message: error.message,
+          stack: error.stack,
+          response: (error as { response?: { data?: unknown } }).response?.data
+        });
+      } else {
+        console.error('API Error:', error);
+      }
+      
+      return NextResponse.json(
+        { error: (error as Error).message || 'Failed to generate idea' },
+        { status: 500 }
+      );
+    }
   }
-}
