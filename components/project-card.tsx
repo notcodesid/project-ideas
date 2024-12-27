@@ -1,5 +1,6 @@
 import React from 'react';
 import { Copy, CheckCircle } from 'lucide-react';
+import { Button } from './ui/button';
 
 interface ProjectCardProps {
   project: {
@@ -21,36 +22,38 @@ export function ProjectCard({ project }: ProjectCardProps) {
   };
 
   return (
-    <div className="bg-[#1e2030] rounded-lg p-6 space-y-4">
-      <h3 className="text-xl font-semibold text-white">{project.title}</h3>
-      <p className="text-gray-300">{project.description}</p>
+    <div className="rounded-lg border bg-card p-6 space-y-4">
+      <h3 className="text-xl font-semibold">{project.title}</h3>
+      <p className="text-muted-foreground">{project.description}</p>
       
       <div className="flex flex-wrap gap-2">
         {project.technologies.map((tech) => (
           <span
             key={tech}
-            className="px-3 py-1 text-sm rounded-full bg-blue-600/20 text-blue-400"
+            className="px-3 py-1 text-sm rounded-full bg-primary/10 text-primary"
           >
             {tech}
           </span>
         ))}
       </div>
 
-      <div className="flex items-center justify-between pt-4 border-t border-gray-700">
-        <span className="text-sm text-gray-400">
+      <div className="flex items-center justify-between pt-4 border-t">
+        <span className="text-sm text-muted-foreground">
           Complexity: {project.complexity}
         </span>
-        <button
+        <Button
+          variant="ghost"
+          size="sm"
           onClick={handleCopy}
-          className="flex items-center space-x-1 text-sm text-blue-400 hover:text-blue-300 transition-colors"
+          className="text-sm"
         >
           {copied ? (
-            <CheckCircle className="w-4 h-4" />
+            <CheckCircle className="w-4 h-4 mr-1" />
           ) : (
-            <Copy className="w-4 h-4" />
+            <Copy className="w-4 h-4 mr-1" />
           )}
-          <span>{copied ? 'Copied!' : 'Copy Idea'}</span>
-        </button>
+          {copied ? 'Copied!' : 'Copy Idea'}
+        </Button>
       </div>
     </div>
   );

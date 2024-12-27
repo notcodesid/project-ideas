@@ -1,0 +1,43 @@
+export const categoryTechnologies = {
+    'Web Development': [
+      'React',
+      'Vue.js',
+      'Angular',
+      'Next.js',
+      'Node.js',
+      'TypeScript',
+      'Tailwind CSS',
+    ],
+    'Mobile App Development': [
+      'React Native',
+      'Flutter',
+      'Swift',
+      'Kotlin',
+      'Ionic',
+      'Xamarin',
+    ],
+    'AI/ML': [
+      'Python',
+      'TensorFlow',
+      'PyTorch',
+      'Scikit-learn',
+      'OpenAI API',
+      'Hugging Face',
+    ],
+    'Blockchain': [
+      'Solidity',
+      'Web3.js',
+      'Ethereum',
+      'Hardhat',
+      'IPFS',
+      'Smart Contracts',
+    ],
+    'DevOps': [
+      'Docker',
+      'Kubernetes',
+      'Jenkins',
+      'AWS',
+      'Terraform',
+      'GitHub Actions',
+    ],
+  } as const;

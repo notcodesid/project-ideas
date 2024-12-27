@@ -1,88 +1,27 @@
-"use client"
-import React, { useState } from 'react';
-import { Header } from '@/components/Header';
-import { SearchInput } from '@/components/SearchInput';
-import { Filters } from '@/components/Filters';
-import { ProjectCard } from '@/components/ProjectCard';
+import { ProjectSearch } from '@/components/ProjectSearch';
+import { ProjectFilters } from '@/components/project-filters';
+import { ProjectList } from '@/components/project-list';
 
-// Sample data - in a real app, this would come from an API
-const sampleProjects = [
-  {
-    title: "Developer Portfolio Builder",
-    description: "Create a tool that helps developers build beautiful portfolios with minimal effort. Include template selection, GitHub integration, and custom domain support.",
-    technologies: ["React", "TypeScript", "Node.js"],
-    complexity: "Intermediate"
-  },
-  {
-    title: "Code Review Assistant",
-    description: "Build an AI-powered code review tool that analyzes pull requests and suggests improvements based on best practices and common patterns.",
-    technologies: ["Python", "TensorFlow", "TypeScript"],
-    complexity: "Advanced"
-  }
-];
-
-function App() {
-  const [isDarkMode, setIsDarkMode] = useState(false);
-  const [prompt, setPrompt] = useState('');
-  const [filters, setFilters] = useState<{
-    categories: string[];
-    technologies: string[];
-    complexity: string;
-    audience: string[];
-  }>({
-    categories: [],
-    technologies: [],
-    complexity: '',
-    audience: []
-  });
-
-  // Toggle dark mode
-  const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode);
-    document.documentElement.classList.toggle('dark');
-  };
-
-  // Clear all filters
-  const clearFilters = () => {
-    setFilters({
-      categories: [],
-      technologies: [],
-      complexity: '',
-      audience: []
-    });
-  };
-
-  // Handle generate button click
-  const handleGenerate = () => {
-    // In a real app, this would make an API call
-    console.log('Generating ideas with:', { prompt, filters });
-  };
-
+export default function Home() {
   return (
-    <div className={`min-h-screen bg-gray-50 dark:bg-black transition-colors ${isDarkMode ? 'dark' : ''}`}>
-      <Header isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode} />
-      
-      <main className="container mx-auto px-4 py-8">
-        <SearchInput
-          prompt={prompt}
-          setPrompt={setPrompt}
-          onGenerate={handleGenerate}
-        />
-        
-        <Filters
-          filters={filters}
-          setFilters={setFilters}
-          onClearFilters={clearFilters}
-        />
-        
-        <div className="mt-8 grid grid-cols-1 gap-6 max-w-3xl mx-auto">
-          {sampleProjects.map((project, index) => (
-            <ProjectCard key={index} project={project} />
-          ))}
+    <div className="min-h-screen">
+      <header className="w-full py-6 px-4 border-b">
+        <div className="max-w-3xl mx-auto flex justify-between items-center">
+          <div className="flex items-center space-x-3">
+            <div>
+              <h1 className="text-2xl font-bold">Project Ideas</h1>
+              <p className="text-sm text-muted-foreground">Find your next project effortlessly!</p>
+            </div>
+          </div>
+          {/* <ThemeToggle /> */}
         </div>
+      </header>
+
+      <main className="container mx-auto px-4 py-8">
+        <ProjectSearch />
+        <ProjectFilters />
+        <ProjectList />
       </main>
     </div>
   );
 }
-
-export default App;
