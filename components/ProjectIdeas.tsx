@@ -11,6 +11,8 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { categoryTechnologies } from '@/lib/data';
+import { Input } from '@/components/ui/input';
+import { useToast } from '@/hooks/use-toast';
 
 export function ProjectIdeas() {
   const [filters, setFilters] = useState<{
@@ -24,31 +26,10 @@ export function ProjectIdeas() {
     complexity: '',
     audience: [],
   });
+  const [email, setEmail] = useState('');
   const audiences = ['Developers', 'Students', 'Businesses', 'Hobbyists', 'Startups'];
   const categories = Object.keys(categoryTechnologies);
-
-  const handleSubmit = async () => {
-    try {
-      const response = await fetch('/api/generate', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ filters })
-      });
-      
-      const data = await response.json();
-      
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to generate idea');
-      }
-      
-      console.log('Generated Idea:', data.idea);
-    } catch (error) {
-      console.error('Error details:', error);
-      // Handle error in UI (e.g., show error message to user)
-    }
-  };
+  const { toast } = useToast()
 
   const handleClearFilters = () => {
     setFilters({
@@ -57,6 +38,23 @@ export function ProjectIdeas() {
       complexity: '',
       audience: [],
     });
+  };
+
+  const handleWaitlistSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (email) {
+      toast({
+        title: "Success!",
+        description: "Thank you for joining our waitlist!",
+      })
+      setEmail('');
+    } else {
+      toast({
+        title: "Error",
+        description: "Please enter a valid email address.",
+        variant: "destructive",
+      })
+    }
   };
 
   const selectedTechnologies =
@@ -176,10 +174,27 @@ export function ProjectIdeas() {
         </div>
         <Button
           className="mt-6 w-full"
-          onClick={handleSubmit}
+          disabled
         >
-          Generate Project Idea
+          Generate Project Idea (Coming Soon)
         </Button>
+        <form onSubmit={handleWaitlistSubmit} className="mt-6">
+          <h3 className="text-lg font-medium mb-2">Join our waitlist</h3>
+          <p className="text-sm text-muted-foreground mb-4">
+            Be the first to know when our project idea generator is ready!
+          </p>
+          <div className="flex gap-2">
+            <Input
+              type="email"
+              placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="flex-grow"
+            />
+            <Button type="submit">Join Waitlist</Button>
+          </div>
+        </form>
       </div>
     </div>
   );

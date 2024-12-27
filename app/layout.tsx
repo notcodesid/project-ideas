@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Azeret_Mono as Geist_Mono } from 'next/font/google';
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-toggle";
-
+import { Toaster } from "@/components/ui/toaster"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -17,7 +17,6 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Project Ideas",
   description: "An app that generates project ideas based on user preferences with customizable filters.",
-
 
   // Open Graph metadata
   openGraph: {
@@ -45,7 +44,6 @@ export const metadata: Metadata = {
   }
 };
 
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -57,13 +55,14 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            {children}
-          </ThemeProvider>
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   );
