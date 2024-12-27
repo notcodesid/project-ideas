@@ -21,28 +21,28 @@ export function ProjectCard({ project }: ProjectCardProps) {
   };
 
   return (
-    <div className="bg-white dark:bg-black rounded-lg shadow-md p-6 transition-transform hover:scale-[1.02]">
-      <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">{project.title}</h3>
-      <p className="text-gray-600 dark:text-gray-300 mb-4">{project.description}</p>
+    <div className="bg-[#1e2030] rounded-lg p-6 space-y-4">
+      <h3 className="text-xl font-semibold text-white">{project.title}</h3>
+      <p className="text-gray-300">{project.description}</p>
       
-      <div className="flex flex-wrap gap-2 mb-4">
+      <div className="flex flex-wrap gap-2">
         {project.technologies.map((tech) => (
           <span
             key={tech}
-            className="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-sm rounded-full"
+            className="px-3 py-1 text-sm rounded-full bg-blue-600/20 text-blue-400"
           >
             {tech}
           </span>
         ))}
       </div>
-      
-      <div className="flex items-center justify-between">
-        <span className="text-sm text-gray-500 dark:text-gray-400">
+
+      <div className="flex items-center justify-between pt-4 border-t border-gray-700">
+        <span className="text-sm text-gray-400">
           Complexity: {project.complexity}
         </span>
         <button
           onClick={handleCopy}
-          className="flex items-center space-x-1 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300"
+          className="flex items-center space-x-1 text-sm text-blue-400 hover:text-blue-300 transition-colors"
         >
           {copied ? (
             <CheckCircle className="w-4 h-4" />

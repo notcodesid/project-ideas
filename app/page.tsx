@@ -24,8 +24,13 @@ const sampleProjects = [
 function App() {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [prompt, setPrompt] = useState('');
-  const [filters, setFilters] = useState({
-    category: '',
+  const [filters, setFilters] = useState<{
+    categories: string[];
+    technologies: string[];
+    complexity: string;
+    audience: string[];
+  }>({
+    categories: [],
     technologies: [],
     complexity: '',
     audience: []
@@ -40,7 +45,7 @@ function App() {
   // Clear all filters
   const clearFilters = () => {
     setFilters({
-      category: '',
+      categories: [],
       technologies: [],
       complexity: '',
       audience: []
