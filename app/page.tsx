@@ -1,8 +1,8 @@
-import { ModeToggle } from '@/components/ModeToggle';
+import { ModeToggle } from "@/components/ModeToggle";
 // import { ProjectSearch } from '@/components/ProjectSearch';
 // import { ProjectFilters } from '@/components/project-filters';
-import { ProjectList } from '@/components/project-list';
-import { ProjectIdeas } from '@/components/ProjectIdeas';
+import { ProjectList } from "@/components/project-list";
+import { ProjectIdeas } from "@/components/ProjectIdeas";
 
 export default function Home() {
   return (
@@ -12,7 +12,9 @@ export default function Home() {
           <div className="flex items-center space-x-3">
             <div>
               <h1 className="text-2xl font-bold">Project Ideas</h1>
-              <p className="text-sm text-muted-foreground">Find your next project effortlessly!</p>
+              <p className="text-sm text-muted-foreground">
+                Find your next project effortlessly!
+              </p>
             </div>
           </div>
           <ModeToggle />
@@ -20,7 +22,7 @@ export default function Home() {
       </header>
 
       <main className="container mx-auto px-4 py-8">
-<ProjectIdeas />
+        <ProjectIdeas />
         <ProjectList />
       </main>
     </div>

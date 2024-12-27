@@ -1,9 +1,8 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
-import { Search, X } from 'lucide-react';
+import { useState } from 'react';
+import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
 import {
   Select,
   SelectContent,
@@ -14,7 +13,6 @@ import {
 import { categoryTechnologies } from '@/lib/data';
 
 export function ProjectIdeas() {
-  const [prompt, setPrompt] = useState('');
   const [filters, setFilters] = useState<{
     categories: string[];
     technologies: string[];
@@ -26,22 +24,22 @@ export function ProjectIdeas() {
     complexity: '',
     audience: [],
   });
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const audiences = ['Developers', 'Students', 'Businesses', 'Hobbyists', 'Startups'];
   const categories = Object.keys(categoryTechnologies);
 
-  useEffect(() => {
-    if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto';
-      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+  const handleSubmit = async () => {
+    try {
+      console.log(filters);
+      const response = await fetch('/api/generate', {
+        method: 'POST',
+        body: JSON.stringify({ filters })
+      });
+      
+      const data = await response.json();
+      console.log('Generated Idea:', data.idea);
+    } catch (error) {
+      console.error('Error:', error);
     }
-  }, [prompt]);
-
-  const handleGenerate = () => {
-    console.log({
-      prompt,
-      filters,
-    });
   };
 
   const handleClearFilters = () => {
@@ -60,30 +58,6 @@ export function ProjectIdeas() {
 
   return (
     <div className="w-full max-w-3xl mx-auto">
-      <div className="relative">
-        <Textarea
-          ref={textareaRef}
-          value={prompt}
-          onChange={(e) => setPrompt(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-              e.preventDefault();
-              handleGenerate();
-            }
-          }}
-          placeholder="Describe the kind of project you're looking for..."
-          className="pr-12 min-h-[48px] resize-none scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200"
-          rows={5}
-        />
-        <Button
-          size="icon"
-          className="absolute right-2 bottom-2"
-          onClick={handleGenerate}
-        >
-          <Search className="h-4 w-4" />
-        </Button>
-      </div>
-
       <div className="mt-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-medium">Filters</h2>
@@ -192,7 +166,14 @@ export function ProjectIdeas() {
             </div>
           </div>
         </div>
+        <Button
+          className="mt-6 w-full"
+          onClick={handleSubmit}
+        >
+          Generate Project Idea
+        </Button>
       </div>
     </div>
   );
 }
+
