@@ -27,8 +27,8 @@ export const metadata: Metadata = {
     images: [
       {
         url:"/open-graph.png", // image link
-        width: 1200,
-        height: 500,
+        width: 1080,
+        height: 1080,
         alt: "Title with their description",
       },
     ],
