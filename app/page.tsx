@@ -1,8 +1,9 @@
+"use client"
 import React, { useState } from 'react';
-import { Header } from './components/Header';
-import { SearchInput } from './components/SearchInput';
-import { Filters } from './components/Filters';
-import { ProjectCard } from './components/ProjectCard';
+import { Header } from '@/components/Header';
+import { SearchInput } from '@/components/SearchInput';
+import { Filters } from '@/components/Filters';
+import { ProjectCard } from '@/components/ProjectCard';
 
 // Sample data - in a real app, this would come from an API
 const sampleProjects = [
