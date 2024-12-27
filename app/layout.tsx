@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     siteName: "Project Ideas",
     images: [
       {
-        url:"/open-graph.png", // image link
+        url:"/open-graph-updated.png", // updated image link
         width: 1080,
         height: 1080,
         alt: "Title with their description",
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Project Ideas",
     description: "An app that generates project ideas based on user preferences with customizable filters.",  
-    images: ["/open-graph.png"],
+    images: ["/open-graph-updated.png"], // updated image link
   }
 };
 
