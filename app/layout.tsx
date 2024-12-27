@@ -3,6 +3,8 @@ import { Geist, Azeret_Mono as Geist_Mono } from 'next/font/google';
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-toggle";
 import { Toaster } from "@/components/ui/toaster"
+import { Analytics } from "@vercel/analytics/react"
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -61,6 +63,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           {children}
+          <Analytics />
           <Toaster />
         </ThemeProvider>
       </body>
