@@ -1,7 +1,8 @@
 import { ModeToggle } from '@/components/ModeToggle';
-import { ProjectSearch } from '@/components/ProjectSearch';
-import { ProjectFilters } from '@/components/project-filters';
+// import { ProjectSearch } from '@/components/ProjectSearch';
+// import { ProjectFilters } from '@/components/project-filters';
 import { ProjectList } from '@/components/project-list';
+import { ProjectIdeas } from '@/components/ProjectIdeas';
 
 export default function Home() {
   return (
@@ -19,8 +20,7 @@ export default function Home() {
       </header>
 
       <main className="container mx-auto px-4 py-8">
-        <ProjectSearch />
-        <ProjectFilters />
+<ProjectIdeas />
         <ProjectList />
       </main>
     </div>
