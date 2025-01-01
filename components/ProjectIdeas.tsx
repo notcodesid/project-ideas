@@ -13,7 +13,6 @@ import {
 import { categoryTechnologies } from "@/lib/data";
 import axios from "axios";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import ReactMarkdown from 'react-markdown';
 
 export function ProjectIdeas() {
   const [geneIdea, setGeneIdea] = useState("");
@@ -272,9 +271,9 @@ export function ProjectIdeas() {
                   value={section.title} 
                   className="mt-4 p-6 focus-visible:outline-none focus-visible:ring-0"
                 >
-                  <ReactMarkdown>
+                  <div className="prose dark:prose-invert">
                     {section.content}
-                  </ReactMarkdown>
+                  </div>
                 </TabsContent>
               ))}
             </Tabs>
