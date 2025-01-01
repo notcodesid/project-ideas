@@ -73,9 +73,9 @@ export function ProjectIdeas() {
       return;
     }
 
-    const API_KEY = "AIzaSyCFVmDkx0sCFwC6cKZPo_g3gmi3P5exzas";
-    console.log(API_KEY)
-    console.log("loading...")
+    const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_GEMINI_API_KEY;
+    console.log(API_KEY);
+
     setLoading(true);
     
     const payload = {
@@ -281,7 +281,7 @@ export function ProjectIdeas() {
           </div>
         </div>
       )}
-      
+
     </div>
     </div>
   );
