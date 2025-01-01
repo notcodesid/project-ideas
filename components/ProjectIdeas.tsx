@@ -12,8 +12,11 @@ import {
 } from "@/components/ui/select";
 import { categoryTechnologies } from "@/lib/data";
 import axios from "axios";
+import ReactMarkdown from 'react-markdown';
+
 
 export function ProjectIdeas() {
+  const [geneIdea, setGeneIdea] = useState("");
   const [filters, setFilters] = useState<{
     categories: string[];
     technologies: string[];
@@ -46,6 +49,8 @@ export function ProjectIdeas() {
   };
 
   const handleSubmit = () => {
+    const API_KEY = "AIzaSyCFVmDkx0sCFwC6cKZPo_g3gmi3P5exzas";
+    console.log(API_KEY )
     console.log("loding...")
     const payload: {
       contents: {
@@ -70,9 +75,9 @@ export function ProjectIdeas() {
     };
 
     axios
-      .post(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyCFVmDkx0sCFwC6cKZPo_g3gmi3P5exzas`, payload)
+      .post(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, payload)
       .then((response) => {
-        console.log("Text:", response.data.candidates[0].content.parts[0].text);
+        setGeneIdea(response.data.candidates[0].content.parts[0].text);
       })
       .catch((error) => {
         console.error(
@@ -90,7 +95,7 @@ export function ProjectIdeas() {
       : [];
 
   return (
-    <div className="w-full max-w-3xl mx-auto">
+    <div className=" container p-10 w-full max-w-3xl mx-auto">
       <div className="mt-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-medium">Filters</h2>
@@ -203,6 +208,18 @@ export function ProjectIdeas() {
         <Button className="mt-6 w-full" onClick={handleSubmit}>
           Generate Project Idea
         </Button>
+
+        
+        <div className="mt-6">
+      <h2 className="text-lg font-medium mb-4">Generated Project Idea</h2>
+      {geneIdea ? (
+        <ReactMarkdown className="prose max-w-none">{geneIdea}</ReactMarkdown>
+      ) : (
+        <p>No content available</p>
+      )}
+    </div>
+
+        
       </div>
     </div>
   );
