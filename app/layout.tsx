@@ -19,30 +19,7 @@ export const metadata: Metadata = {
   title: "Project Ideas",
   description: "An app that generates project ideas based on user preferences with customizable filters.",
 
-  // Open Graph metadata
-  openGraph: {
-    title: "Project Ideas",
-    description: "An app that generates project ideas based on user preferences with customizable filters.",  
-    url: "https://project-ideas-theta.vercel.app/",
-    siteName: "Project Ideas",
-    images: [
-      {
-        url:"/open-graph-updated.png", // updated image link
-        width: 1080,
-        height: 1080,
-        alt: "Title with their description",
-      },
-    ],
-    locale: "en_US",
-    type: "article",
-  },
-
-  twitter: {
-    card: "summary_large_image",
-    title: "Project Ideas",
-    description: "An app that generates project ideas based on user preferences with customizable filters.",  
-    images: ["/open-graph-updated.png"], // updated image link
-  }
+ 
 };
 
 export default function RootLayout({

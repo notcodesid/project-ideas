@@ -74,7 +74,7 @@ export function ProjectIdeas() {
     }
 
     const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_GEMINI_API_KEY;
-    console.log(API_KEY);
+
 
     setLoading(true);
     
