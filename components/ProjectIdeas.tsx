@@ -93,7 +93,8 @@ export function ProjectIdeas() {
       .post(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, payload)
       .then((response) => {
         setGeneIdea(response.data.candidates[0].content.parts[0].text);
-        setLoading(false); // Set loading to false after success
+        setLoading(false);
+        handleClearFilters();
       })
       .catch((error) => {
         console.error(
@@ -237,12 +238,20 @@ export function ProjectIdeas() {
   )}
 </Button>
         
-    <div className="mt-6">
-      {/* <h2 className="text-lg font-medium mb-4">Generated Project Idea</h2> */}
-      <div>
-        <ReactMarkdown className="prose max-w-none">{geneIdea}</ReactMarkdown>
-      </div>
-    </div>
+<div className="mt-6">
+  <ReactMarkdown 
+    className="prose dark:prose-invert prose-blue max-w-none
+    prose-headings:font-bold 
+    prose-h1:text-xl 
+    prose-h2:text-lg 
+    prose-p:text-justify 
+    prose-li:marker:text-blue-500
+    prose-strong:text-blue-500
+    prose-strong:font-semibold"
+  >
+    {geneIdea}
+  </ReactMarkdown>
+</div>
 
         
       </div>
