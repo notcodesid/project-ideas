@@ -241,19 +241,30 @@ export function ProjectIdeas() {
           )}
         </Button>
         
-        {sections.length > 0 && (
-          <div className="mt-8 border rounded-lg overflow-hidden">
-            <Tabs defaultValue={sections[0]?.title} className="w-full">
+        {geneIdea && (
+        <div className="mt-8">
+          <div className="bg-black text-white p-3 rounded-t-lg">
+            {sections[0]?.title}
+          </div>
+          
+          <div className="border rounded-b-lg">
+            <Tabs defaultValue="Category" className="w-full">
               <TabsList className="w-full h-auto flex flex-wrap gap-2 justify-start p-2 bg-muted/50">
-                {sections.map(section => (
-                  <TabsTrigger 
-                    key={section.title} 
-                    value={section.title}
-                    className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2 rounded-md"
-                  >
-                    {section.title}
-                  </TabsTrigger>
-                ))}
+                <TabsTrigger value="Category" className="px-4 py-2 rounded-md data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                  Category
+                </TabsTrigger>
+                <TabsTrigger value="Technologies" className="px-4 py-2 rounded-md data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                  Technologies
+                </TabsTrigger>
+                <TabsTrigger value="Complexity" className="px-4 py-2 rounded-md data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                  Complexity
+                </TabsTrigger>
+                <TabsTrigger value="Audience" className="px-4 py-2 rounded-md data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                  Audience
+                </TabsTrigger>
+                <TabsTrigger value="Description" className="px-4 py-2 rounded-md data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                  Project Description
+                </TabsTrigger>
               </TabsList>
               {sections.map(section => (
                 <TabsContent 
@@ -268,8 +279,10 @@ export function ProjectIdeas() {
               ))}
             </Tabs>
           </div>
-        )}
-      </div>
+        </div>
+      )}
+      
+    </div>
     </div>
   );
 }
