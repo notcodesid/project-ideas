@@ -38,6 +38,15 @@ export function ProjectIdeas() {
     "Startups",
   ];
 
+  const isAllFiltersSelected = () => {
+    return (
+      filters.categories.length > 0 &&
+      filters.technologies.length > 0 &&
+      filters.complexity !== "" &&
+      filters.audience.length > 0
+    );
+  };
+
   const categories = Object.keys(categoryTechnologies);
 
   const handleClearFilters = () => {
@@ -52,6 +61,13 @@ export function ProjectIdeas() {
 
 
   const handleSubmit = () => {
+
+    if (!isAllFiltersSelected()) {
+      // You might want to show an error message to the user
+      alert("Please select all filters before generating an idea");
+      return;
+    }
+
     const API_KEY = "AIzaSyCFVmDkx0sCFwC6cKZPo_g3gmi3P5exzas";
     console.log(API_KEY)
     console.log("loading...")
