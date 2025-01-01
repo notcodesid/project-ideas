@@ -1,18 +1,17 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { X } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { useState } from "react";
+import { X } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { categoryTechnologies } from '@/lib/data';
-import { Input } from '@/components/ui/input';
-import { useToast } from '@/hooks/use-toast';
+} from "@/components/ui/select";
+import { categoryTechnologies } from "@/lib/data";
+import axios from "axios";
 
 export function ProjectIdeas() {
   const [filters, setFilters] = useState<{
@@ -23,43 +22,71 @@ export function ProjectIdeas() {
   }>({
     categories: [],
     technologies: [],
-    complexity: '',
+    complexity: "",
     audience: [],
   });
-  const [email, setEmail] = useState('');
-  const audiences = ['Developers', 'Students', 'Businesses', 'Hobbyists', 'Startups'];
+
+  const audiences = [
+    "Developers",
+    "Students",
+    "Businesses",
+    "Hobbyists",
+    "Startups",
+  ];
+
   const categories = Object.keys(categoryTechnologies);
-  const { toast } = useToast()
 
   const handleClearFilters = () => {
     setFilters({
       categories: [],
       technologies: [],
-      complexity: '',
+      complexity: "",
       audience: [],
     });
   };
 
-  const handleWaitlistSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (email) {
-      toast({
-        title: "Success!",
-        description: "Thank you for joining our waitlist!",
+  const handleSubmit = () => {
+    console.log("loding...")
+    const payload: {
+      contents: {
+        parts: {
+          text: string;
+        }[];
+      }[];
+    } = {
+      contents: [
+        {
+          parts: [
+            {
+              text: `Generate a project idea with the following filters: 
+              Categories: ${filters.categories.join(", ")}, 
+              Technologies: ${filters.technologies.join(", ")}, 
+              Complexity: ${filters.complexity}, 
+              Audience: ${filters.audience.join(", ")}`
+            }
+          ]
+        }
+      ]
+    };
+
+    axios
+      .post(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyCFVmDkx0sCFwC6cKZPo_g3gmi3P5exzas`, payload)
+      .then((response) => {
+        console.log("Text:", response.data.candidates[0].content.parts[0].text);
       })
-      setEmail('');
-    } else {
-      toast({
-        title: "Error",
-        description: "Please enter a valid email address.",
-        variant: "destructive",
-      })
-    }
+      .catch((error) => {
+        console.error(
+          "Error generating idea:",
+          error.response?.data || error.message
+        );
+      });
   };
 
   const selectedTechnologies =
     filters.categories.length > 0
-      ? categoryTechnologies[filters.categories[0] as keyof typeof categoryTechnologies]
+      ? categoryTechnologies[
+          filters.categories[0] as keyof typeof categoryTechnologies
+        ]
       : [];
 
   return (
@@ -82,7 +109,7 @@ export function ProjectIdeas() {
           <div className="space-y-2">
             <label className="text-sm text-muted-foreground">Category</label>
             <Select
-              value={filters.categories[0] || ''}
+              value={filters.categories[0] || ""}
               onValueChange={(value) =>
                 setFilters((prev) => ({ ...prev, categories: [value] }))
               }
@@ -108,7 +135,7 @@ export function ProjectIdeas() {
                   <Button
                     key={tech}
                     variant={
-                      filters.technologies.includes(tech) ? 'default' : 'outline'
+                      filters.technologies.includes(tech) ? "default" : "outline"
                     }
                     size="sm"
                     onClick={() =>
@@ -154,7 +181,7 @@ export function ProjectIdeas() {
                 <Button
                   key={audience}
                   variant={
-                    filters.audience.includes(audience) ? 'default' : 'outline'
+                    filters.audience.includes(audience) ? "default" : "outline"
                   }
                   size="sm"
                   onClick={() => {
@@ -172,31 +199,11 @@ export function ProjectIdeas() {
             </div>
           </div>
         </div>
-        <Button
-          className="mt-6 w-full"
-          disabled
-        >
-          Generate Project Idea (Coming Soon)
+
+        <Button className="mt-6 w-full" onClick={handleSubmit}>
+          Generate Project Idea
         </Button>
-        <form onSubmit={handleWaitlistSubmit} className="mt-6">
-          <h3 className="text-lg font-medium mb-2">Join our waitlist</h3>
-          <p className="text-sm text-muted-foreground mb-4">
-            Be the first to know when our project idea generator is ready!
-          </p>
-          <div className="flex gap-2">
-            <Input
-              type="email"
-              placeholder="Enter your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="flex-grow"
-            />
-            <Button type="submit">Join Waitlist</Button>
-          </div>
-        </form>
       </div>
     </div>
   );
 }
-
