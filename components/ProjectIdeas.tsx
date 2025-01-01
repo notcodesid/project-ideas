@@ -12,8 +12,8 @@ import {
 } from "@/components/ui/select";
 import { categoryTechnologies } from "@/lib/data";
 import axios from "axios";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import ReactMarkdown from 'react-markdown';
-
 
 export function ProjectIdeas() {
   const [geneIdea, setGeneIdea] = useState("");
@@ -38,6 +38,14 @@ export function ProjectIdeas() {
     "Startups",
   ];
 
+  const sections = geneIdea.split('\n\n**').map(section => {
+    const [title, ...content] = section.split(':**');
+    return {
+      title: title.replace('**', ''),
+      content: content.join(':**')
+    };
+  });
+
   const isAllFiltersSelected = () => {
     return (
       filters.categories.length > 0 &&
@@ -59,11 +67,8 @@ export function ProjectIdeas() {
     setLoading(false);
   };
 
-
   const handleSubmit = () => {
-
     if (!isAllFiltersSelected()) {
-      // You might want to show an error message to the user
       alert("Please select all filters before generating an idea");
       return;
     }
@@ -101,14 +106,13 @@ export function ProjectIdeas() {
           "Error generating idea:",
           error.response?.data || error.message
         );
-        setLoading(false); // Set loading to false after error
+        setLoading(false);
       })
       .finally(() => {
-        // Optionally, you can also use finally to ensure loading is set to false
-        // in case of both success and failure
         setLoading(false);
       });
-};
+  };
+
   const selectedTechnologies =
     filters.categories.length > 0
       ? categoryTechnologies[
@@ -117,7 +121,7 @@ export function ProjectIdeas() {
       : [];
 
   return (
-    <div className=" container p-10 w-full max-w-3xl mx-auto">
+    <div className="container p-10 w-full max-w-3xl mx-auto">
       <div className="mt-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-medium">Filters</h2>
@@ -227,33 +231,44 @@ export function ProjectIdeas() {
           </div>
         </div>
 
-       <Button className="mt-6 w-full" onClick={handleSubmit} disabled={loading}>
-  {loading ? (
-    <>
-      <span className="mr-2">Loading...</span>
-      {/* Optional: Add a spinner component here */}
-    </>
-  ) : (
-    "Generate Project Idea"
-  )}
-</Button>
+        <Button className="mt-6 w-full" onClick={handleSubmit} disabled={loading}>
+          {loading ? (
+            <>
+              <span className="mr-2">Loading...</span>
+            </>
+          ) : (
+            "Generate Project Idea"
+          )}
+        </Button>
         
-<div className="mt-6">
-  <ReactMarkdown 
-    className="prose dark:prose-invert prose-blue max-w-none
-    prose-headings:font-bold 
-    prose-h1:text-xl 
-    prose-h2:text-lg 
-    prose-p:text-justify 
-    prose-li:marker:text-blue-500
-    prose-strong:text-blue-500
-    prose-strong:font-semibold"
-  >
-    {geneIdea}
-  </ReactMarkdown>
-</div>
-
-        
+        {sections.length > 0 && (
+          <div className="mt-8 border rounded-lg overflow-hidden">
+            <Tabs defaultValue={sections[0]?.title} className="w-full">
+              <TabsList className="w-full h-auto flex flex-wrap gap-2 justify-start p-2 bg-muted/50">
+                {sections.map(section => (
+                  <TabsTrigger 
+                    key={section.title} 
+                    value={section.title}
+                    className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-4 py-2 rounded-md"
+                  >
+                    {section.title}
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+              {sections.map(section => (
+                <TabsContent 
+                  key={section.title} 
+                  value={section.title} 
+                  className="mt-4 p-6 focus-visible:outline-none focus-visible:ring-0"
+                >
+                  <ReactMarkdown>
+                    {section.content}
+                  </ReactMarkdown>
+                </TabsContent>
+              ))}
+            </Tabs>
+          </div>
+        )}
       </div>
     </div>
   );
