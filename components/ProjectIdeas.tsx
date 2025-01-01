@@ -17,6 +17,7 @@ import ReactMarkdown from 'react-markdown';
 
 export function ProjectIdeas() {
   const [geneIdea, setGeneIdea] = useState("");
+  const [loading, setLoading] = useState(false);
   const [filters, setFilters] = useState<{
     categories: string[];
     technologies: string[];
@@ -46,19 +47,17 @@ export function ProjectIdeas() {
       complexity: "",
       audience: [],
     });
+    setLoading(false);
   };
+
 
   const handleSubmit = () => {
     const API_KEY = "AIzaSyCFVmDkx0sCFwC6cKZPo_g3gmi3P5exzas";
-    console.log(API_KEY )
-    console.log("loding...")
-    const payload: {
-      contents: {
-        parts: {
-          text: string;
-        }[];
-      }[];
-    } = {
+    console.log(API_KEY)
+    console.log("loading...")
+    setLoading(true);
+    
+    const payload = {
       contents: [
         {
           parts: [
@@ -78,15 +77,21 @@ export function ProjectIdeas() {
       .post(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, payload)
       .then((response) => {
         setGeneIdea(response.data.candidates[0].content.parts[0].text);
+        setLoading(false); // Set loading to false after success
       })
       .catch((error) => {
         console.error(
           "Error generating idea:",
           error.response?.data || error.message
         );
+        setLoading(false); // Set loading to false after error
+      })
+      .finally(() => {
+        // Optionally, you can also use finally to ensure loading is set to false
+        // in case of both success and failure
+        setLoading(false);
       });
-  };
-
+};
   const selectedTechnologies =
     filters.categories.length > 0
       ? categoryTechnologies[
@@ -205,18 +210,22 @@ export function ProjectIdeas() {
           </div>
         </div>
 
-        <Button className="mt-6 w-full" onClick={handleSubmit}>
-          Generate Project Idea
-        </Button>
-
+       <Button className="mt-6 w-full" onClick={handleSubmit} disabled={loading}>
+  {loading ? (
+    <>
+      <span className="mr-2">Loading...</span>
+      {/* Optional: Add a spinner component here */}
+    </>
+  ) : (
+    "Generate Project Idea"
+  )}
+</Button>
         
-        <div className="mt-6">
-      <h2 className="text-lg font-medium mb-4">Generated Project Idea</h2>
-      {geneIdea ? (
+    <div className="mt-6">
+      {/* <h2 className="text-lg font-medium mb-4">Generated Project Idea</h2> */}
+      <div>
         <ReactMarkdown className="prose max-w-none">{geneIdea}</ReactMarkdown>
-      ) : (
-        <p>No content available</p>
-      )}
+      </div>
     </div>
 
         
