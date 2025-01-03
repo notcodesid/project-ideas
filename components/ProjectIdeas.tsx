@@ -72,7 +72,8 @@ export function ProjectIdeas() {
       return;
     }
 
-    const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_GEMINI_API_KEY;
+    // const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_GEMINI_API_KEY;
+    const API_KEY = "AIzaSyCFVmDkx0sCFwC6cKZPo_g3gmi3P5exzas"
 
 
     setLoading(true);
