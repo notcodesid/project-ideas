@@ -9,10 +9,10 @@ An app that generates project ideas based on user preferences with customizable 
 
 ## 🎯 Features
 
-- **Choose a Category**
-- **Select a Tech Stack**
-- **Set Your Experience Level**
-- **Define Target Audience**
+- Choose a Category
+- Select a Tech Stack
+- Set Your Experience Level
+- Define Target Audience
 
 
 ## 🔧 Installation
