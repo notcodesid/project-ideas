@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -21,6 +21,9 @@ export type SectionsType = {
     content: string;
 }[];
 
+const categories = Object.keys(categoryTechnologies);
+const audiences = ["Developers", "Students", "Businesses", "Hobbyists", "Startups"];
+
 export function ProjectIdeas() {
 	const [geneIdea, setGeneIdea] = useState<Record<string, unknown> | null>(null);
 	const [loading, setLoading] = useState<boolean>(false);
@@ -30,13 +33,15 @@ export function ProjectIdeas() {
 		complexity: "",
 		audience: [],
 	});
+	const [selectedTechnologies, setSelectedTechnologies] = useState<(typeof categoryTechnologies)[keyof typeof categoryTechnologies] | never[]>([]);
 
-	const categories = Object.keys(categoryTechnologies);
-	const selectedTechnologies = filters.categories.length > 0?
-		categoryTechnologies[filters.categories[0] as keyof typeof categoryTechnologies]
-		: [];
+	useEffect(() => {
+		setSelectedTechnologies(filters.categories.length > 0?
+			categoryTechnologies[filters.categories[0] as keyof typeof categoryTechnologies]
+			: []
+		);
+	}, [filters.categories]);
 
-	const audiences = ["Developers", "Students", "Businesses", "Hobbyists", "Startups"];
 
 	const isAllFiltersSelected = () => {
 		return (
