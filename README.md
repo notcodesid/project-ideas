@@ -1,36 +1,162 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Project Idea Generator (P.I.G)
 
-## Getting Started
+A **Next.js + TypeScript** application for generating project ideas for your next great project powered by **GEMINI**.
 
-First, run the development server:
+## Overview
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+This project leverages modern web technologies and AI capabilities to simplify the process of generating feature-rich descriptions tailored for specific categories, technologies, target audiences, and complexity levels. Users provide inputs, which are processed by the **Gemini AI model**, and receive structured outputs displayed in an intuitive grid format.
+
+## Features
+
+-   Interactive user input interface.
+-   Predefined **filters** to guide users.
+-   Dynamic complexity level selection.
+-   Integration with the Gemini AI model for tailored content generation.
+-   Clean and modern UI built with **TypeScript** and **Next.js**.
+
+## Technologies Used
+
+-   **Next.js**: Frontend framework for server-rendered React applications.
+-   **TypeScript**: For type-safe and maintainable development.
+-   **Tailwind CSS**: For efficient and responsive UI styling.
+-   **Gemini AI Model**: Processes user inputs and generates structured outputs.
+
+## Installation and Setup
+
+1. Clone this repository:
+
+    ```bash
+    	git clone https://github.com/Anshumankhanna/project-ideas.git
+    ```
+
+2. Navigate to the project directory:
+
+    ```bash
+    	cd project-ideas
+    ```
+
+3. Install dependencies:
+
+    ```bash
+    	npm install
+    ```
+
+4. Create an `.env.local` file in the root directory of your project.
+
+5. Paste your GEMINI API KEY as:
+
+    ```shell
+    	# Paste your api key here
+    	API_KEY=your-api-key
+    ```
+
+6. Run the development server:
+    ```bash
+    	npm run dev
+    ```
+    Access the application at `http://localhost:3000`.
+
+7. Try generating a project idea, if you recieve an output, you can now begin making changes, otherwise check the steps, you have missed something.
+
+## Filters
+
+### Categories
+
+Predefined categories with associated technologies:
+
+```json
+{
+    "Web Development": [
+        "React",
+        "Vue.js",
+        "Angular",
+        "Next.js",
+        "Node.js",
+        "TypeScript",
+        "Tailwind CSS"
+    ],
+    "Mobile App Development": [
+        "React Native",
+        "Flutter",
+        "Swift",
+        "Kotlin",
+        "Ionic",
+        "Xamarin"
+    ],
+    "AI/ML": [
+        "Python",
+        "TensorFlow",
+        "PyTorch",
+        "Scikit-learn",
+        "OpenAI API",
+        "Hugging Face"
+    ],
+    "Blockchain": [
+        "Solidity",
+        "Web3.js",
+        "Ethereum",
+        "Hardhat",
+        "IPFS",
+        "Smart Contracts"
+    ],
+    "DevOps": [
+        "Docker",
+        "Kubernetes",
+        "Jenkins",
+        "AWS",
+        "Terraform",
+        "GitHub Actions"
+    ]
+}
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Target Audiences
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+-   Developers
+-   Students
+-   Businesses
+-   Hobbyists
+-   Startups
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Complexity Levels
 
-## Learn More
+-   Easy
+-   Intermediate
+-   Advanced
+-   Expert
 
-To learn more about Next.js, take a look at the following resources:
+## Workflow
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. **Input Data**:  
+   Users select:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+    - Category
+    - Technologies
+    - Target Audience
+    - Complexity Level
 
-## Deploy on Vercel
+2. **AI Processing**:  
+   Inputs are sent to the **Gemini AI Model** for generating content.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+3. **Output Display**:  
+   Results are presented as:
+    - A grid containing descriptions.
+    - A nested grid showcasing categorized features.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## License
+
+The project is originally developed by [notcodesid](https://github.com/notcodesid)
+
+This fork is created, developed & maintained by [Anshumankhanna](https://github.com/Anshumankhanna)
+
+It is an open-source project and contributors are welcomed.
+
+## Acknowledgements
+
+-   **Next.js** for the seamless development experience.
+-   **Tailwind CSS** for efficient UI design.
+-   **Gemini AI Model** for advanced content generation.
+
+---
+
+Feel free to modify or enhance the template based on your specific requirements.

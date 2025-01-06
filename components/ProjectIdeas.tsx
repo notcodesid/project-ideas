@@ -4,285 +4,227 @@ import { useState } from "react";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
 } from "@/components/ui/select";
 import { categoryTechnologies } from "@/lib/data";
-import axios from "axios";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"; //eslint-disable-line
+import { FilterType } from "@/types/filterType";
+import getProjectIdeas from "@/utils/getProjectIdeas";
+import capitalize from "@/utils/capitalize";
+
+export type SectionsType = {
+    title: string;
+    content: string;
+}[];
 
 export function ProjectIdeas() {
-  const [geneIdea, setGeneIdea] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [filters, setFilters] = useState<{
-    categories: string[];
-    technologies: string[];
-    complexity: string;
-    audience: string[];
-  }>({
-    categories: [],
-    technologies: [],
-    complexity: "",
-    audience: [],
-  });
+	const [geneIdea, setGeneIdea] = useState<Record<string, unknown> | null>(null);
+	const [loading, setLoading] = useState<boolean>(false);
+	const [filters, setFilters] = useState<FilterType>({
+		categories: [],
+		technologies: [],
+		complexity: "",
+		audience: [],
+	});
 
-  const audiences = [
-    "Developers",
-    "Students",
-    "Businesses",
-    "Hobbyists",
-    "Startups",
-  ];
+	const categories = Object.keys(categoryTechnologies);
+	const selectedTechnologies = filters.categories.length > 0?
+		categoryTechnologies[filters.categories[0] as keyof typeof categoryTechnologies]
+		: [];
 
-  const sections = geneIdea.split('\n\n**').map(section => {
-    const [title, ...content] = section.split(':**');
-    return {
-      title: title.replace('**', ''),
-      content: content.join(':**')
-    };
-  });
+	const audiences = ["Developers", "Students", "Businesses", "Hobbyists", "Startups"];
 
-  const isAllFiltersSelected = () => {
-    return (
-      filters.categories.length > 0 &&
-      filters.technologies.length > 0 &&
-      filters.complexity !== "" &&
-      filters.audience.length > 0
-    );
-  };
+	const isAllFiltersSelected = () => {
+		return (
+			filters.categories.length > 0 &&
+			filters.technologies.length > 0 &&
+			filters.complexity !== "" &&
+			filters.audience.length > 0
+		);
+	};
+	const handleClearFilters = () => {
+		setFilters({
+			categories: [],
+			technologies: [],
+			complexity: "",
+			audience: [],
+		});
+		setLoading(false);
+	};
+	const handleSubmit = async () => {
+		if (!isAllFiltersSelected()) {
+			alert("Please select all filters before generating an idea");
+			return;
+		}
 
-  const categories = Object.keys(categoryTechnologies);
+		setLoading(true);
 
-  const handleClearFilters = () => {
-    setFilters({
-      categories: [],
-      technologies: [],
-      complexity: "",
-      audience: [],
-    });
-    setLoading(false);
-  };
+		const { error, result } = await getProjectIdeas(filters);
 
-  const handleSubmit = () => {
-    if (!isAllFiltersSelected()) {
-      alert("Please select all filters before generating an idea");
-      return;
-    }
+		if (error !== null) {
+			console.error("An error occured");
+			return ;
+		}
 
-    // const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_GEMINI_API_KEY;
-    const API_KEY = "AIzaSyCFVmDkx0sCFwC6cKZPo_g3gmi3P5exzas"
+		setGeneIdea(result);
+		setLoading(false);
+	};
 
+	return (
+		<div className="container p-10 w-full max-w-3xl mx-auto">
+			<div className="mt-6">
+				<div className="flex items-center justify-between mb-4">
+					<h2 className="text-lg font-medium">Filters</h2>
+					<Button
+						variant="ghost"
+						size="sm"
+						onClick={handleClearFilters}
+						className="text-sm text-muted-foreground"
+					>
+						<X className="w-4 h-4 mr-1" />
+						Clear filters
+					</Button>
+				</div>
 
-    setLoading(true);
-    
-    const payload = {
-      contents: [
-        {
-          parts: [
-            {
-              text: `Generate a project idea with the following filters: 
-              Categories: ${filters.categories.join(", ")}, 
-              Technologies: ${filters.technologies.join(", ")}, 
-              Complexity: ${filters.complexity}, 
-              Audience: ${filters.audience.join(", ")}`
-            }
-          ]
-        }
-      ]
-    };
+				<div className="space-y-4">
+					<div className="space-y-2">
+						<label className="text-sm text-muted-foreground">Category</label>
+						<Select
+							value={filters.categories[0] || ""}
+							onValueChange={(value) =>
+								setFilters((prev) => ({ ...prev, categories: [value] }))
+							}
+						>
+							<SelectTrigger>
+								<SelectValue placeholder="Select a category..." />
+							</SelectTrigger>
+							<SelectContent>
+								{categories.map((category) => (
+									<SelectItem key={category} value={category}>
+										{category}
+									</SelectItem>
+								))}
+							</SelectContent>
+						</Select>
+					</div>
 
-    axios
-      .post(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, payload)
-      .then((response) => {
-        setGeneIdea(response.data.candidates[0].content.parts[0].text);
-        setLoading(false);
-        handleClearFilters();
-      })
-      .catch((error) => {
-        console.error(
-          "Error generating idea:",
-          error.response?.data || error.message
-        );
-        setLoading(false);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
+					{selectedTechnologies.length > 0 && (
+						<div className="space-y-2">
+							<label className="text-sm text-muted-foreground">Technologies</label>
+							<div className="flex flex-wrap gap-2">
+								{selectedTechnologies.map((tech) => (
+									<Button
+										key={tech}
+										variant={
+											filters.technologies.includes(tech) ? "default" : "outline"
+										}
+										size="sm"
+										onClick={() =>
+											setFilters((prev) => ({
+												...prev,
+												technologies: prev.technologies.includes(tech)
+													? prev.technologies.filter((t) => t !== tech)
+													: [...prev.technologies, tech],
+											}))
+										}
+									>
+										{tech}
+									</Button>
+								))}
+							</div>
+						</div>
+					)}
 
-  const selectedTechnologies =
-    filters.categories.length > 0
-      ? categoryTechnologies[
-          filters.categories[0] as keyof typeof categoryTechnologies
-        ]
-      : [];
+					<div className="space-y-2">
+						<label className="text-sm text-muted-foreground">Complexity Level</label>
+						<Select
+							value={filters.complexity}
+							onValueChange={(value) =>
+								setFilters((prev) => ({ ...prev, complexity: value }))
+							}
+						>
+							<SelectTrigger>
+								<SelectValue placeholder="Select complexity..." />
+							</SelectTrigger>
+							<SelectContent>
+								<SelectItem value="beginner">Beginner</SelectItem>
+								<SelectItem value="intermediate">Intermediate</SelectItem>
+								<SelectItem value="advanced">Advanced</SelectItem>
+								<SelectItem value="expert">Expert</SelectItem>
+							</SelectContent>
+						</Select>
+					</div>
 
-  return (
-    <div className="container p-10 w-full max-w-3xl mx-auto">
-      <div className="mt-6">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-medium">Filters</h2>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={handleClearFilters}
-            className="text-sm text-muted-foreground"
-          >
-            <X className="w-4 h-4 mr-1" />
-            Clear filters
-          </Button>
-        </div>
+					<div className="space-y-2">
+						<label className="text-sm text-muted-foreground">Target Audience</label>
+						<div className="flex flex-wrap gap-2">
+							{audiences.map((audience) => (
+								<Button
+									key={audience}
+									variant={
+										filters.audience.includes(audience) ? "default" : "outline"
+									}
+									size="sm"
+									onClick={() => {
+										setFilters((prev) => ({
+											...prev,
+											audience: prev.audience.includes(audience)
+												? prev.audience.filter((a) => a !== audience)
+												: [...prev.audience, audience],
+										}));
+									}}
+								>
+									{audience}
+								</Button>
+							))}
+						</div>
+					</div>
+				</div>
 
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <label className="text-sm text-muted-foreground">Category</label>
-            <Select
-              value={filters.categories[0] || ""}
-              onValueChange={(value) =>
-                setFilters((prev) => ({ ...prev, categories: [value] }))
-              }
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select a category..." />
-              </SelectTrigger>
-              <SelectContent>
-                {categories.map((category) => (
-                  <SelectItem key={category} value={category}>
-                    {category}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          {selectedTechnologies.length > 0 && (
-            <div className="space-y-2">
-              <label className="text-sm text-muted-foreground">Technologies</label>
-              <div className="flex flex-wrap gap-2">
-                {selectedTechnologies.map((tech) => (
-                  <Button
-                    key={tech}
-                    variant={
-                      filters.technologies.includes(tech) ? "default" : "outline"
-                    }
-                    size="sm"
-                    onClick={() =>
-                      setFilters((prev) => ({
-                        ...prev,
-                        technologies: prev.technologies.includes(tech)
-                          ? prev.technologies.filter((t) => t !== tech)
-                          : [...prev.technologies, tech],
-                      }))
-                    }
-                  >
-                    {tech}
-                  </Button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          <div className="space-y-2">
-            <label className="text-sm text-muted-foreground">Complexity Level</label>
-            <Select
-              value={filters.complexity}
-              onValueChange={(value) =>
-                setFilters((prev) => ({ ...prev, complexity: value }))
-              }
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select complexity..." />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="beginner">Beginner</SelectItem>
-                <SelectItem value="intermediate">Intermediate</SelectItem>
-                <SelectItem value="advanced">Advanced</SelectItem>
-                <SelectItem value="expert">Expert</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="space-y-2">
-            <label className="text-sm text-muted-foreground">Target Audience</label>
-            <div className="flex flex-wrap gap-2">
-              {audiences.map((audience) => (
-                <Button
-                  key={audience}
-                  variant={
-                    filters.audience.includes(audience) ? "default" : "outline"
-                  }
-                  size="sm"
-                  onClick={() => {
-                    setFilters((prev) => ({
-                      ...prev,
-                      audience: prev.audience.includes(audience)
-                        ? prev.audience.filter((a) => a !== audience)
-                        : [...prev.audience, audience],
-                    }));
-                  }}
-                >
-                  {audience}
-                </Button>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        <Button className="mt-6 w-full" onClick={handleSubmit} disabled={loading}>
-          {loading ? (
-            <>
-              <span className="mr-2">Loading...</span>
-            </>
-          ) : (
-            "Generate Project Idea"
-          )}
-        </Button>
-        
-        {geneIdea && (
-        <div className="mt-8">
-          <div className="bg-black text-white p-3 rounded-t-lg">
-            {sections[0]?.title}
-          </div>
-          
-          <div className="border rounded-b-lg">
-            <Tabs defaultValue="Category" className="w-full">
-              <TabsList className="w-full h-auto flex flex-wrap gap-2 justify-start p-2 bg-muted/50">
-                <TabsTrigger value="Category" className="px-4 py-2 rounded-md data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
-                  Category
-                </TabsTrigger>
-                <TabsTrigger value="Technologies" className="px-4 py-2 rounded-md data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
-                  Technologies
-                </TabsTrigger>
-                <TabsTrigger value="Complexity" className="px-4 py-2 rounded-md data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
-                  Complexity
-                </TabsTrigger>
-                <TabsTrigger value="Audience" className="px-4 py-2 rounded-md data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
-                  Audience
-                </TabsTrigger>
-                <TabsTrigger value="Description" className="px-4 py-2 rounded-md data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
-                  Project Description
-                </TabsTrigger>
-              </TabsList>
-              {sections.map(section => (
-                <TabsContent 
-                  key={section.title} 
-                  value={section.title} 
-                  className="mt-4 p-6 focus-visible:outline-none focus-visible:ring-0"
-                >
-                  <div className="prose dark:prose-invert">
-                    {section.content}
-                  </div>
-                </TabsContent>
-              ))}
-            </Tabs>
-          </div>
-        </div>
-      )}
-
-    </div>
-    </div>
-  );
+				<Button className="mt-6 w-full" onClick={handleSubmit} disabled={loading}>
+					{loading ? (
+						<>
+							<span className="mr-2">Loading...</span>
+						</>
+					) : (
+						"Generate Project Idea"
+					)}
+				</Button>
+				
+				{geneIdea !== null &&
+					Object.entries(geneIdea).map((elem, row) => (
+						<div
+							key={row}
+							className="grid grid-cols-[1fr_4fr] [&_>_*]:p-2 mt-6 border"
+						>
+							{typeof elem[1] === "string" &&
+								<>
+									<span>{capitalize(elem[0])}</span>
+									<span>{elem[1]}</span>
+								</>
+							}
+							{typeof elem[1] === "object" && elem[1] !== null &&
+								<>
+									<div>{capitalize(elem[0])}</div>
+									<div className="space-y-3">
+										{Object.entries(elem[1]).map((value, col) => (
+											<div key={col} className="grid grid-cols-[1fr_3fr] gap-3">
+												<div>{value[0]}</div>
+												<div>{value[1]}</div>
+											</div>
+										))}
+									</div>
+									
+								</>
+							}
+						</div>
+					))
+				}
+			</div>
+		</div>
+	);
 }
