@@ -1,13 +1,14 @@
+
 # Project Ideas Generator
 
 ![Project Ideas Generator](./public/image.png)
 
-## 🚀 Introducing
+## Introducing
 
 An app that generates project ideas based on user preferences with customizable filters.
 
 
-## 🎯 Features
+## Features
 
 - Choose a Category
 - Select a Tech Stack
@@ -16,6 +17,25 @@ An app that generates project ideas based on user preferences with customizable 
 
 
 ## 🔧 Installation
+
+Using Docker:
+
+- Run the following command to build the Docker image:
+
+```bash
+docker build -t sidharthh/project-ideas .
+```
+- Run the Docker Container
+```bash
+docker run -p 3000:3000 sidharthh/project-ideas
+```
+
+Access the Application
+  ```bash 
+http://localhost:3000
+  ```
+---
+Without Docker:
 
 Follow these steps to set up the app locally:
 
